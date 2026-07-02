@@ -1,5 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import type { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
@@ -36,6 +39,26 @@ const roleLabel = (role: string) =>
 
 export default function Dashboard({ name, role, favoritesCount }: Props) {
   const firstName = name.split(" ")[0];
+  const router = useRouter();
+  const { data: session, update } = useSession();
+
+  // Pas regjistrimit me Google me zgjedhjen "blogger", aplikojmë rolin njëherë
+  // (Google i krijon si përdorues normal), rifreskojmë sesionin dhe hapim Studion.
+  useEffect(() => {
+    if (router.query.claimRole !== "blogger") return;
+    if (!session?.user || session.user.role === "blogger" || session.user.role === "admin") return;
+    (async () => {
+      const res = await fetch("/api/profile/role", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: "blogger" }),
+      });
+      if (res.ok) {
+        await update({ role: "blogger" });
+        window.location.assign("/studio");
+      }
+    })();
+  }, [router.query.claimRole, session, update]);
 
   return (
     <>

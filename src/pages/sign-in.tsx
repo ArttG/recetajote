@@ -46,9 +46,12 @@ export default function SignIn({ hasGoogle, hasFacebook }: Props) {
     const res = await signIn("credentials", { redirect: false, email: values.email, password: values.password });
     if (res?.error) {
       setError("Email ose fjalëkalim i pasaktë");
-    } else {
-      router.push("/dashboard");
+      return;
     }
+    // Navigim i fortë (jo router.push) që cookie-i i sesionit të dërgohet sigurt te
+    // faqja e mbrojtur — përndryshe ndodhte një garë ku faqja rikthehej te /sign-in.
+    const cb = typeof router.query.callbackUrl === "string" ? router.query.callbackUrl : "/dashboard";
+    window.location.assign(cb);
   };
 
   return (

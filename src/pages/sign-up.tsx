@@ -69,8 +69,16 @@ export default function SignUp({ hasGoogle, hasFacebook }: Props) {
     if (login?.error) {
       router.push("/sign-in");
     } else {
-      router.push("/dashboard");
+      // Navigim i fortë që cookie-i i sesionit të dërgohet te faqja e mbrojtur.
+      window.location.assign("/dashboard");
     }
+  };
+
+  // Për regjistrim me Google: bartim rolin e zgjedhur te callbackUrl, që ta aplikojmë
+  // pas kthimit nga Google (Google si parazgjedhje krijon përdorues normal).
+  const googleSignUp = () => {
+    const callbackUrl = selectedRole === "blogger" ? "/dashboard?claimRole=blogger" : "/dashboard";
+    signIn("google", { callbackUrl });
   };
 
   return (
@@ -211,7 +219,7 @@ export default function SignUp({ hasGoogle, hasFacebook }: Props) {
                   {hasGoogle && (
                     <button
                       type="button"
-                      onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                      onClick={googleSignUp}
                       style={{ flex: 1, minWidth: 140, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: 11, cursor: "pointer", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 14, fontWeight: 600, color: "var(--ink)", background: "var(--bg)", border: "1px solid var(--border-2)" }}
                     >
                       <GoogleIcon size={18} />Vazhdo me Google

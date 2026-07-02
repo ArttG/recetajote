@@ -6,7 +6,7 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { compare } from "bcryptjs";
-import clientPromise from "@/lib/mongodb";
+import clientPromise, { DB_NAME } from "@/lib/mongodb";
 import { getUserByEmail } from "@/api/services/User";
 
 // Ndërtojmë provider-at në mënyrë dinamike: OAuth shtohet vetëm nëse ka çelësa.
@@ -57,7 +57,10 @@ if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
 }
 
 export const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise) as Adapter,
+  // `databaseName` duhet të përputhet me DB-në që përdor aplikacioni (getDb),
+  // përndryshe përdoruesit e OAuth (Google) shkojnë në një DB tjetër dhe admini
+  // nuk i sheh dot te lista e përdoruesve.
+  adapter: MongoDBAdapter(clientPromise, { databaseName: DB_NAME }) as Adapter,
   providers,
   pages: {
     signIn: "/sign-in",
@@ -67,10 +70,18 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     // Bart `id` dhe `role` në token-in JWT.
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = (user as { id?: string }).id;
-        token.role = (user as { role?: string }).role ?? "user";
+        // Roli autoritativ merret nga DB — përdoruesit e OAuth (Google) nuk e kanë
+        // `role` te objekti `user`, ndaj e lexojmë nga baza sipas email-it.
+        const dbUser = user.email ? await getUserByEmail(user.email) : null;
+        token.role = dbUser?.role ?? (user as { role?: string }).role ?? "user";
+      }
+      // Kur klienti thërret `useSession().update({ role })`, rifreskojmë rolin te token-i
+      // (përdoret p.sh. kur një përdorues i ri me Google zgjedh të bëhet blogger).
+      if (trigger === "update" && session && typeof (session as { role?: string }).role === "string") {
+        token.role = (session as { role?: string }).role;
       }
       return token;
     },
