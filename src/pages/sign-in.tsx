@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import type { GetServerSideProps } from "next";
 import Icon from "@/components/shared/Icon";
+import { GoogleIcon, FacebookIcon } from "@/components/shared/BrandIcons";
 
 interface FormValues {
   email: string;
@@ -122,7 +123,7 @@ export default function SignIn({ hasGoogle, hasFacebook }: Props) {
                       onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
                       style={{ flex: 1, minWidth: 140, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: 11, cursor: "pointer", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 14, fontWeight: 600, color: "var(--ink)", background: "var(--bg)", border: "1px solid var(--border-2)" }}
                     >
-                      <Icon name="g_translate" size={18} color="#db4437" />Google
+                      <GoogleIcon size={18} />Google
                     </button>
                   )}
                   {hasFacebook && (
@@ -130,7 +131,7 @@ export default function SignIn({ hasGoogle, hasFacebook }: Props) {
                       onClick={() => signIn("facebook", { callbackUrl: "/dashboard" })}
                       style={{ flex: 1, minWidth: 140, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: 11, cursor: "pointer", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 14, fontWeight: 600, color: "var(--ink)", background: "var(--bg)", border: "1px solid var(--border-2)" }}
                     >
-                      <Icon name="public" size={18} color="#1877f2" />Facebook
+                      <FacebookIcon size={18} />Facebook
                     </button>
                   )}
                 </div>

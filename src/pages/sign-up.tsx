@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import type { GetServerSideProps } from "next";
 import Icon from "@/components/shared/Icon";
+import { GoogleIcon, FacebookIcon } from "@/components/shared/BrandIcons";
 
 interface FormValues {
   name: string;
@@ -12,6 +14,21 @@ interface FormValues {
   password: string;
   role: "user" | "blogger";
 }
+
+interface Props {
+  hasGoogle: boolean;
+  hasFacebook: boolean;
+}
+
+// Shfaqim butonat OAuth vetëm nëse provider-at janë të konfiguruar.
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  return {
+    props: {
+      hasGoogle: !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
+      hasFacebook: !!(process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET),
+    },
+  };
+};
 
 const roleOptions: { value: "user" | "blogger"; icon: string; title: string; desc: string }[] = [
   { value: "user", icon: "restaurant", title: "Përdorues", desc: "Shfleto receta, ruaj favorite dhe lër komente." },
@@ -25,7 +42,7 @@ const inputStyle: React.CSSProperties = { flex: 1, border: "none", background: "
 const benefits = ["Ruaj receta të pakufizuara", "Lër komente dhe vlerësime", "Personalizo profilin tënd"];
 
 // Faqja e regjistrimit — react-hook-form me validim (Ushtrimi Javor 8/9).
-export default function SignUp() {
+export default function SignUp({ hasGoogle, hasFacebook }: Props) {
   const router = useRouter();
   const [error, setError] = useState("");
   const {
@@ -184,6 +201,37 @@ export default function SignUp() {
                 {isSubmitting ? "Duke u regjistruar…" : "Krijo llogari falas"}
               </button>
             </form>
+
+            {(hasGoogle || hasFacebook) && (
+              <>
+                <div style={{ margin: "22px 0", display: "flex", alignItems: "center", gap: 12, color: "var(--muted)", fontSize: 12 }}>
+                  <span style={{ height: 1, flex: 1, background: "var(--border)" }} />ose<span style={{ height: 1, flex: 1, background: "var(--border)" }} />
+                </div>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  {hasGoogle && (
+                    <button
+                      type="button"
+                      onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                      style={{ flex: 1, minWidth: 140, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: 11, cursor: "pointer", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 14, fontWeight: 600, color: "var(--ink)", background: "var(--bg)", border: "1px solid var(--border-2)" }}
+                    >
+                      <GoogleIcon size={18} />Vazhdo me Google
+                    </button>
+                  )}
+                  {hasFacebook && (
+                    <button
+                      type="button"
+                      onClick={() => signIn("facebook", { callbackUrl: "/dashboard" })}
+                      style={{ flex: 1, minWidth: 140, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: 11, cursor: "pointer", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 14, fontWeight: 600, color: "var(--ink)", background: "var(--bg)", border: "1px solid var(--border-2)" }}
+                    >
+                      <FacebookIcon size={18} />Facebook
+                    </button>
+                  )}
+                </div>
+                <p style={{ margin: "12px 0 0", fontSize: 11.5, color: "var(--muted)", textAlign: "center" }}>
+                  Me OAuth regjistrohesh si përdorues; për rol blogger përdor formën lart.
+                </p>
+              </>
+            )}
 
             <p style={{ margin: "22px 0 0", textAlign: "center", fontSize: 14, color: "var(--muted)" }}>
               Ke tashmë llogari? <Link href="/sign-in" style={{ color: "var(--accent)", fontWeight: 600, textDecoration: "none" }}>Kyçu</Link>

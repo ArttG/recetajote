@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
-    "seed": "node --env-file=.env.local scripts/seed.mjs"
+    "seed": "node --env-file=.env.local scripts/seed.mjs",
+    "create-admin": "node --env-file=.env.local scripts/create-admin.mjs"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.2",

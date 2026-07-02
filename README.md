@@ -175,7 +175,7 @@ src/
 ├── pages/            # Faqet + API routes (pages/api)
 ├── styles/           # globals.css (Tailwind + design tokens)
 ├── types/            # next-auth.d.ts
-└── middleware.ts     # Mbrojtja e rrugëve sipas rolit (Proxy në Next.js 16)
+└── proxy.ts          # Mbrojtja e rrugëve sipas rolit (Proxy = middleware në Next.js 16)
 ```
 
 ---
@@ -198,7 +198,7 @@ _(Zëvendëso me emrat realë të grupit.)_
 |---|----------------|---------|-----|
 | 1 | 10+ faqe funksionale (15) | ✅ 16 faqe | `src/pages/` |
 | 2 | 4+ komponentë të ripërdorshëm (5) | ✅ | `Header`, `Footer`, `RecipeCard` (Card), `Modal`, `Button`, `RecipeManager`, `UserManager` |
-| 3 | NextAuth + role + middleware (10) | ✅ 3 role | `lib/auth.ts`, `middleware.ts` (Credentials + Google + Facebook) |
+| 3 | NextAuth + role + middleware (10) | ✅ 3 role | `lib/auth.ts`, `proxy.ts` (Credentials + Google + Facebook) |
 | 4 | CRUD për 2+ entitete (10) | ✅ | Recipe (CRUD), User (CRUD-admin), Comment, Favorite |
 | 5 | MongoDB me 3+ modele (8) | ✅ 4 modele | `src/api/models/` |
 | 6 | Hooks + Context + custom hook (8) | ✅ | `useFetch`, `ThemeContext`, `FavoritesContext` |
