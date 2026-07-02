@@ -1,40 +1,219 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🍳 RecetaJote — Platformë Recetash
 
-## Getting Started
+Projekt për lëndën **Zhvillim i Ueb-it në Anën e Klientit** (Prof. Cand. Phd. Vesa Morina).
 
-First, run the development server:
+Një aplikacion full-stack për të zbuluar, ruajtur dhe ndarë receta, i ndërtuar me **Next.js (Pages Router), TypeScript, MongoDB, NextAuth dhe Tailwind CSS**.
 
+🔗 **Live demo:** _[shto linkun e Vercel këtu pas deploy-it]_
+
+---
+
+## 📸 Screenshots
+
+_Shto screenshots këtu pas deploy-it (ballina, recetat, detajet, admin panel, studio, dark mode)._
+
+| Ballina | Recetat | Admin Panel |
+|---------|---------|-------------|
+| _(foto)_ | _(foto)_ | _(foto)_ |
+
+---
+
+## ✨ Veçoritë
+
+- 🏠 **16 faqe funksionale**: Home, About, Contact, Login, Register, Recipes, Recipe Details, Dashboard, Admin, **Studio**, Profile, Favorites (+ Search, 404, FAQ, Terms)
+- 🔐 **Autentifikim** me NextAuth: email/fjalëkalim (bcrypt) + Google & Facebook OAuth
+- 👮 **3 role** (`user` / `blogger` / `admin`) me mbrojtje rrugësh përmes `middleware`
+- 📝 **CRUD** për disa entitete: Receta, Përdorues (admin), Komente, Favorites
+- ❤️ **Favorites** — ruaj recetat e preferuara
+- 🗄️ **MongoDB** me 4 modele (User, Recipe, Comment, Favorite)
+- ⚡ **Data fetching**: SSG, ISR, SSR dhe `getStaticPaths`
+- 🎣 **Hooks & Context**: `useState`, `useEffect`, custom `useFetch`, Context API
+- ✅ **Formularë me validim** (react-hook-form)
+- 🎨 **Tailwind CSS** + responsive design + **Dark Mode**
+- 🧪 **Teste** me Jest + React Testing Library
+- 🤖 **CI/CD** me GitHub Actions (lint + test + build)
+
+---
+
+## 👥 Rolet dhe qasjet
+
+| Roli | Recetat | Përdoruesit | Komente / Favorites | Faqja e dedikuar |
+|------|---------|-------------|---------------------|------------------|
+| **user** | vetëm-lexim | — | ✅ krijon/fshin të vetat | `/dashboard` |
+| **blogger** | CRUD **vetëm mbi të vetat** | — | ✅ | `/studio` |
+| **admin** | CRUD mbi **të gjitha** | CRUD mbi **të gjithë** përdoruesit | ✅ | `/admin` |
+
+- Gjatë regjistrimit, përdoruesi zgjedh **user** ose **blogger** (roli `admin` nuk jepet kurrë përmes regjistrimit).
+- Blogger-i menaxhon vetëm recetat që i ka krijuar vetë (kontroll pronësie në API).
+- Admini ndryshon rolet dhe fshin përdorues nga paneli i adminit (por jo llogarinë e vet — mbrojtje nga vetë-bllokimi).
+
+---
+
+## 🛠️ Teknologjitë
+
+| Kategoria | Teknologjia |
+|-----------|-------------|
+| Framework | Next.js 16 (Pages Router) |
+| Gjuha | TypeScript |
+| Databaza | MongoDB (native driver) + `@auth/mongodb-adapter` |
+| Autentifikim | NextAuth.js (Credentials + Google + Facebook) |
+| Stilizim | Tailwind CSS + CSS variables (design tokens) |
+| Formularë | React Hook Form |
+| Testim | Jest + React Testing Library |
+| CI/CD | GitHub Actions |
+| Deploy | Vercel |
+
+---
+
+## 🚀 Instalimi lokal
+
+### 1. Klono projektin
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repo-url>
+cd recipe-platform
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Konfiguro environment variables
+Krijo skedarin `.env.local` në rrënjë dhe plotëso vlerat:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```env
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/?retryWrites=true&w=majority
+MONGODB_DB=recipeapp
+NEXTAUTH_SECRET=<gjenero një sekret>
+NEXTAUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+FACEBOOK_CLIENT_ID=...
+FACEBOOK_CLIENT_SECRET=...
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+> Gjenero `NEXTAUTH_SECRET` me:
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+> ```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### 3. Mbush databazën me të dhëna shembull
+```bash
+npm run seed
+```
+Kjo krijon 6 receta + një **admin**: `admin@recetajote.com` / `admin123`
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Nis aplikacionin
+```bash
+npm run dev
+```
+Hape në [http://localhost:3000](http://localhost:3000)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📜 Skriptet
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+| Komanda | Përshkrimi |
+|---------|-----------|
+| `npm run dev` | Nis serverin lokal |
+| `npm run build` | Ndërton për production |
+| `npm start` | Nis versionin e ndërtuar |
+| `npm test` | Ekzekuton testet |
+| `npm run seed` | Mbush databazën me të dhëna shembull |
+| `npm run lint` | Kontrollon kodin me ESLint |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🔑 Konfigurimi i OAuth (opsional)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Google:** [console.cloud.google.com](https://console.cloud.google.com) → Credentials → OAuth client ID
+- Authorized redirect URI: `http://localhost:3000/api/auth/callback/google` (dhe URL-ja e Vercel)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+**Facebook:** [developers.facebook.com](https://developers.facebook.com) → App → Facebook Login
+- Valid OAuth Redirect URI: `http://localhost:3000/api/auth/callback/facebook`
+
+> Nëse çelësat nuk vendosen, butonat OAuth fshihen automatikisht dhe login me email/fjalëkalim funksionon normalisht. Shih edhe `OAUTH-SETUP.txt`.
+
+---
+
+## ☁️ Deployment në Vercel
+
+1. Push kodin në GitHub.
+2. Në [vercel.com](https://vercel.com) → New Project → importo repo-n.
+3. Shto të gjitha environment variables te **Settings → Environment Variables**.
+4. Vendos `NEXTAUTH_URL` = URL-ja e prodhimit (p.sh. `https://recetajote.vercel.app`).
+5. Deploy — Vercel ekzekuton automatikisht `npm install` dhe `npm run build`.
+
+---
+
+## 🔌 API Routes
+
+| Route | Metodat | Qasja |
+|-------|---------|-------|
+| `/api/auth/[...nextauth]` | — | NextAuth |
+| `/api/auth/register` | POST | Publik (zgjedh rolin user/blogger) |
+| `/api/recipes` | GET, POST | GET publik · POST blogger/admin |
+| `/api/recipes/[id]` | GET, PUT, DELETE | GET publik · PUT/DELETE admin ose autori |
+| `/api/users` | GET | Admin |
+| `/api/users/[id]` | PUT, DELETE | Admin |
+| `/api/comments` | GET, POST | GET publik · POST i kyçur |
+| `/api/comments/[id]` | DELETE | Autori ose admin |
+| `/api/favorites` | GET, POST, DELETE | I kyçur |
+| `/api/profile` | GET, PUT | I kyçur |
+| `/api/contact` | POST | Publik (me validim) |
+
+---
+
+## 🗺️ Struktura e projektit
+
+```
+src/
+├── api/
+│   ├── models/       # Interfaces (User, Recipe, Comment, Favorite)
+│   └── services/     # Funksionet CRUD me MongoDB
+├── components/       # Header, Footer, MainLayout, Comments,
+│                     # RecipeManager, UserManager + shared/ (Button, RecipeCard, Modal, Icon)
+├── contexts/         # ThemeContext (dark mode), FavoritesContext
+├── hooks/            # useFetch (custom hook)
+├── lib/              # mongodb, auth, apiAuth
+├── pages/            # Faqet + API routes (pages/api)
+├── styles/           # globals.css (Tailwind + design tokens)
+├── types/            # next-auth.d.ts
+└── middleware.ts     # Mbrojtja e rrugëve sipas rolit (Proxy në Next.js 16)
+```
+
+---
+
+## 👥 Anëtarët e grupit
+
+| Emri | Roli |
+|------|------|
+| _Anëtar 1_ | Frontend & UI (komponentët, stilizim) |
+| _Anëtar 2_ | Backend & API (MongoDB, CRUD, role) |
+| _Anëtar 3_ | Autentifikim & Deploy (NextAuth, Vercel, testim, CI/CD) |
+
+_(Zëvendëso me emrat realë të grupit.)_
+
+---
+
+## ✅ Përmbushja e kërkesave (100 pikë)
+
+| # | Kërkesa (pikë) | Statusi | Ku |
+|---|----------------|---------|-----|
+| 1 | 10+ faqe funksionale (15) | ✅ 16 faqe | `src/pages/` |
+| 2 | 4+ komponentë të ripërdorshëm (5) | ✅ | `Header`, `Footer`, `RecipeCard` (Card), `Modal`, `Button`, `RecipeManager`, `UserManager` |
+| 3 | NextAuth + role + middleware (10) | ✅ 3 role | `lib/auth.ts`, `middleware.ts` (Credentials + Google + Facebook) |
+| 4 | CRUD për 2+ entitete (10) | ✅ | Recipe (CRUD), User (CRUD-admin), Comment, Favorite |
+| 5 | MongoDB me 3+ modele (8) | ✅ 4 modele | `src/api/models/` |
+| 6 | Hooks + Context + custom hook (8) | ✅ | `useFetch`, `ThemeContext`, `FavoritesContext` |
+| 7 | SSR + SSG + ISR + getStaticPaths (8) | ✅ | Home (ISR 30s), Recipes (SSR), Details (SSG + `getStaticPaths` + ISR 60s) |
+| 8 | Formularë me validim (5) | ✅ | Register, Login, Contact, Recipe form, Profile |
+| 9 | Tailwind + responsive (6) | ✅ | Klasa utility të Tailwind te komponentët (`Button`, `RecipeCard`, `Modal`, `Footer`) + responsive kudo + Dark Mode |
+| 10 | Teste 3 komponentë + 2 API (5) | ✅ 13 teste | `src/__tests__/` |
+| 11 | Deployment + README (5) | ⏳ shto linkun/screenshots | Vercel + ky skedar |
+| 12 | Env variables (3) | ✅ | `.env.local`, `OAUTH-SETUP.txt` |
+| 13 | Prezantimi (7) | ⏳ | Ndarja e roleve më lart |
+
+### 🎁 Pikë Bonus
+- ✅ **Dark Mode** funksional (`ThemeContext` + toggle në Header)
+- ✅ **CI/CD** me GitHub Actions (`.github/workflows/ci.yml`)
+- ⬜ useSWR / React Query — jo
+- ⬜ WebSocket / notifikime real-time — jo
+
+> **Shënim për #9:** komponentët e ripërdorshëm (`Button`, `RecipeCard`, `Modal`, `Footer`) stilizohen me klasa utility të Tailwind (duke përfshirë *arbitrary values* që lidhen me CSS variables, kështu ruhet Dark Mode). Pjesa tjetër e faqeve përdor një përzierje të klasave utility dhe *inline styles* me *design tokens*. Aplikacioni është plotësisht responsive për mobile, tablet dhe desktop.

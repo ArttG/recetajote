@@ -1,26 +1,173 @@
 @import "tailwindcss";
 
+/* Class-based dark mode. Toggling `dark` on <html> switches the theme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   RecetaJote design tokens (warm cream / terracotta palette)
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #faf5ec;
+  --bg-2: #f3ead9;
+  --surface: #fffdf8;
+  --surface-2: #f8f1e5;
+  --ink: #241e17;
+  --ink-2: #544a3f;
+  --muted: #8a7d6d;
+  --border: #ece1cf;
+  --border-2: #e0d3bd;
+  --accent: #bd5a2d;
+  --accent-2: #a3491f;
+  --accent-soft: #f7e8d9;
+  --accent-ink: #8a3c1a;
+  --gold: #c98a2b;
+  --danger: #c0492e;
+  --danger-soft: #fbeae6;
+  --danger-border: #e4bcb0;
+  --shadow-sm: 0 1px 2px rgba(60, 40, 22, 0.05), 0 3px 10px -5px rgba(60, 40, 22, 0.1);
+  --shadow-lg: 0 18px 44px -18px rgba(60, 40, 22, 0.3), 0 5px 14px -9px rgba(60, 40, 22, 0.16);
+
+  /* kept for backwards compatibility with any leftover utilities */
+  --background: var(--bg);
+  --foreground: var(--ink);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --bg: #15110d;
+  --bg-2: #1b1610;
+  --surface: #221c15;
+  --surface-2: #2a2219;
+  --ink: #f3ead9;
+  --ink-2: #d0c3b1;
+  --muted: #9d8f7c;
+  --border: #352c22;
+  --border-2: #43382b;
+  --accent: #dd7d43;
+  --accent-2: #e8905a;
+  --accent-soft: #2c2015;
+  --accent-ink: #e6a273;
+  --gold: #d69a3f;
+  --danger: #e0745a;
+  --danger-soft: #2c1a13;
+  --danger-border: #4a2a20;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 22px 48px -20px rgba(0, 0, 0, 0.62);
+
+  --background: var(--bg);
+  --foreground: var(--ink);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--bg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Hanken Grotesk", system-ui, Arial, Helvetica, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Material Symbols Rounded helper */
+.ms {
+  font-family: "Material Symbols Rounded";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+.ms.fill {
+  font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+}
+
+.font-serif {
+  font-family: "Newsreader", Georgia, serif;
+}
+.font-mono {
+  font-family: "Spline Sans Mono", ui-monospace, monospace;
+}
+
+/* ============================================================
+   Hover utilities (inline styles can't express :hover)
+   ============================================================ */
+.rj-lift {
+  transition: transform 0.15s ease;
+}
+.rj-lift:hover {
+  transform: translateY(-2px);
+}
+
+.rj-card {
+  transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.28s ease;
+}
+.rj-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.rj-navlink {
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.rj-navlink:hover {
+  color: var(--accent) !important;
+}
+
+.rj-chip {
+  transition: all 0.15s ease;
+}
+.rj-chip:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+.rj-iconbtn {
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.rj-iconbtn:hover {
+  background: var(--accent-soft) !important;
+}
+
+.rj-footlink {
+  transition: color 0.15s ease;
+}
+.rj-footlink:hover {
+  color: var(--accent) !important;
+}
+
+.rj-btn-accent {
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.rj-btn-accent:hover {
+  background: var(--accent-2) !important;
+}
+
+.rj-fav {
+  transition: transform 0.18s ease;
+}
+.rj-fav:hover {
+  transform: scale(1.09);
+}
+
+/* Placeholder color for form inputs */
+.rj-input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+.rj-input {
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--border-2);
+}
+.rj-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }

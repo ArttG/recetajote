@@ -1,0 +1,94 @@
+========================================
+  KONFIGURIMI I OAUTH (Google + Facebook)
+========================================
+
+E RËNDËSISHME:
+  OAuth kërkon që porta të përputhet me NEXTAUTH_URL.
+  Te .env.local -> NEXTAUTH_URL=http://localhost:3000
+  Pra nis projektin te PORTA 3000 (mbyll çdo program që e zë 3000).
+  Nëse përdor portë tjetër (p.sh. 3002), ndrysho NEXTAUTH_URL dhe
+  të gjitha redirect URI-t te ajo portë.
+
+
+----------------------------------------
+GOOGLE OAUTH
+----------------------------------------
+
+1. Hap: https://console.cloud.google.com
+
+2. Lart majtas -> Select a project -> New Project
+   -> emër: RecetaJote -> Create
+
+3. Menu majtas -> APIs & Services -> OAuth consent screen:
+   - User type: External -> Create
+   - Plotëso: App name, User support email, Developer email
+   - Save and Continue
+   - Te "Test users" -> Add Users -> shto email-in tënd (Gmail) -> Save
+
+4. Menu -> APIs & Services -> Credentials
+   -> + Create Credentials -> OAuth client ID:
+   - Application type: Web application
+   - Authorized JavaScript origins:
+        http://localhost:3000
+   - Authorized redirect URIs:
+        http://localhost:3000/api/auth/callback/google
+   - Create
+
+5. Kopjo Client ID dhe Client Secret.
+
+6. Vendosi te .env.local:
+     GOOGLE_CLIENT_ID=<client id>
+     GOOGLE_CLIENT_SECRET=<client secret>
+
+
+----------------------------------------
+FACEBOOK OAUTH
+----------------------------------------
+
+1. Hap: https://developers.facebook.com -> kyçu -> My Apps -> Create App
+
+2. Use case: "Authenticate and request data from users with
+   Facebook Login" -> Next
+
+3. App type: Consumer (nëse pyet) -> plotëso emrin + email -> Create App
+
+4. Te dashboard-i -> shto produktin "Facebook Login" -> Settings:
+   - Valid OAuth Redirect URIs:
+        http://localhost:3000/api/auth/callback/facebook
+   - Save changes
+
+5. Menu majtas -> App settings -> Basic:
+   - Kopjo App ID dhe App Secret (kliko "Show")
+
+6. Vendosi te .env.local:
+     FACEBOOK_CLIENT_ID=<app id>
+     FACEBOOK_CLIENT_SECRET=<app secret>
+
+   Shënim: localhost (http) funksionon vetëm sa app-i është në
+   modalitetin "Development". Për production duhet HTTPS (Vercel).
+
+
+----------------------------------------
+PAS KONFIGURIMIT
+----------------------------------------
+
+1. Ruaj .env.local
+2. Ripo serverin:  Ctrl+C te terminali, pastaj  npm run dev
+   (ndryshimet e .env.local kërkojnë restart)
+3. Shko te /sign-in -> butonat "Vazhdo me Google" dhe
+   "Vazhdo me Facebook" shfaqen automatikisht.
+
+
+----------------------------------------
+PËR VERCEL (kur ta deploy-osh)
+----------------------------------------
+
+Shto edhe redirect URI-t me URL-në e Vercel-it:
+  https://emri-projektit.vercel.app/api/auth/callback/google
+  https://emri-projektit.vercel.app/api/auth/callback/facebook
+
+Dhe te Vercel -> Settings -> Environment Variables vendos:
+  NEXTAUTH_URL=https://emri-projektit.vercel.app
+  (plus GOOGLE_* dhe FACEBOOK_* çelësat)
+
+========================================

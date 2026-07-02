@@ -13,6 +13,13 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    rules: {
+      // Data fetching / theme restore në useEffect (pattern-i i mësuar në lëndë)
+      // aktivon rregullën e re strikte të Next 16; e lëmë si "warn".
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

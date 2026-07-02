@@ -1,0 +1,94 @@
+========================================
+  SI TA NIS (RUN) PROJEKTIN RecetaJote
+========================================
+
+Vendndodhja e projektit:
+  C:\Users\artga\OneDrive\Desktop\Zhvilimi i Uebit\recipe-platform
+
+
+----------------------------------------
+PËRDORIMI I PËRDITSHËM (kur projekti është gati)
+----------------------------------------
+
+1. Hap terminalin te folderi i projektit.
+   Mënyra më e lehtë: hap folderin "recipe-platform" në VS Code,
+   pastaj menu Terminal -> New Terminal.
+
+   Ose në PowerShell shkruaj:
+     cd "C:\Users\artga\OneDrive\Desktop\Zhvilimi i Uebit\recipe-platform"
+
+2. Nis serverin:
+     npm run dev
+
+3. Hape në browser adresën që shfaqet te terminali, zakonisht:
+     http://localhost:3000
+   (Nëse porta 3000 është e zënë, Next zgjedh vetë një tjetër,
+    p.sh. http://localhost:3002 — shiko rreshtin "Local:" te terminali.)
+
+4. Për ta ndalur serverin: kliko te terminali dhe shtyp  CTRL + C.
+
+
+----------------------------------------
+KYÇJA SI ADMIN
+----------------------------------------
+
+  URL:       /sign-in
+  Email:     admin@recetajote.com
+  Password:  admin123
+
+  Si admin mund të shtosh/editosh/fshish receta te faqja /admin.
+
+
+----------------------------------------
+HERËN E PARË / NË NJË KOMPJUTER TË RI
+----------------------------------------
+
+(Bëhet vetëm një herë)
+
+1. Instalo varësitë:
+     npm install --legacy-peer-deps
+
+2. Sigurohu që ekziston skedari .env.local me MONGODB_URI
+   (është konfiguruar tashmë; mos e ngarko në GitHub).
+
+3. Mbush databazën me receta shembull + admin:
+     npm run seed
+
+   Duhet të shohësh:
+     ✅ U shtuan 6 receta
+     ✅ U krijua admini: admin@recetajote.com / admin123
+
+4. Pastaj:
+     npm run dev
+
+
+----------------------------------------
+KOMANDA TË TJERA TË DOBISHME
+----------------------------------------
+
+  npm run dev     -> nis serverin lokal (për zhvillim)
+  npm run build   -> ndërton versionin për production (kontrollon gabimet)
+  npm start       -> nis versionin e ndërtuar (pas build)
+  npm test        -> ekzekuton testet (duhet të kalojnë 13 teste)
+  npm run lint    -> kontrollon kodin
+  npm run seed    -> rimbush databazën me të dhëna shembull
+
+
+----------------------------------------
+PROBLEME TË SHPESHTA
+----------------------------------------
+
+* "Porta 3000 është e zënë" -> normal, përdor URL-në tjetër që
+  shfaqet te terminali (p.sh. 3002). Ose mbyll programin që e ka zënë.
+
+* Faqja s'hapet -> sigurohu që terminali tregon "Ready" dhe
+  përdor saktë adresën http://localhost:PORT.
+
+* Imazhet e recetave nuk shfaqen -> URL-ja duhet të jetë adresa e
+  DREJTPËRDREJTË e imazhit (mbaron me .jpg/.png/.webp), jo një faqe.
+  Klik i djathtë mbi imazh -> "Copy image address".
+
+* Databaza duket bosh -> ekzekuto:  npm run seed
+
+
+========================================
